@@ -1,0 +1,52 @@
+/* ============================================================
+   RTL Overrides — إعدادات الاتجاه للغة العربية
+   ============================================================ */
+
+html[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+html[dir="ltr"] {
+  direction: ltr;
+  text-align: left;
+}
+
+/* Flip icons that need mirroring in RTL (e.g., arrows) */
+html[dir="rtl"] .icon-flip-rtl {
+  transform: scaleX(-1);
+}
+
+/* Sidebar border side */
+html[dir="rtl"] .app-sidebar {
+  border-inline-end: none;
+  border-left: 1px solid var(--border-color);
+}
+
+/* Active nav indicator position for RTL */
+html[dir="rtl"] .router-link-active::before {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+  border-radius: 4px 0 0 4px;
+}
+
+/* Notification dropdown position in RTL */
+html[dir="rtl"] .notification-dropdown {
+  left: auto;
+  right: 0;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: var(--radius-full); }
+::-webkit-scrollbar-thumb:hover { background: var(--text-disabled); }
+
+/* Selection */
+::selection {
+  background-color: rgba(79, 70, 229, 0.2);
+  color: var(--text-primary);
+}
+.dark ::selection {
+  background-color: rgba(129, 140, 248, 0.25);
+}

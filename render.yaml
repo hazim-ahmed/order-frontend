@@ -1,0 +1,15 @@
+# ==============================================================================
+# Render Blueprint Configuration for Frontend Static Site
+# ==============================================================================
+services:
+  - type: static
+    name: kmt-oms-frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        sync: false

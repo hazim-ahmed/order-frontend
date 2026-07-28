@@ -1,0 +1,85 @@
+/* ============================================================
+   Theme Variables — متغيرات الألوان للوضع النهاري والليلي
+   ============================================================ */
+
+:root {
+  /* === Light Mode (النهاري) === */
+  --bg-primary:    #F8FAFC;
+  --bg-secondary:  #F1F5F9;
+  --bg-surface:    #FFFFFF;
+  --bg-hover:      #F1F5F9;
+  
+  --border-color:  #E2E8F0;
+  --border-hover:  #CBD5E1;
+  
+  --text-primary:   #0F172A;
+  --text-secondary: #64748B;
+  --text-disabled:  #94A3B8;
+  
+  /* Brand — Indigo vibrant */
+  --brand-primary: #4F46E5;
+  --brand-hover:   #4338CA;
+  --brand-light:   #EEF2FF;
+  
+  /* Semantic colors */
+  --success: #059669;
+  --warning: #D97706;
+  --danger:  #DC2626;
+  --info:    #0EA5E9;
+  
+  --success-bg: rgba(5, 150, 105, 0.08);
+  --warning-bg: rgba(217, 119, 6, 0.08);
+  --danger-bg:  rgba(220, 38, 38, 0.08);
+  --info-bg:    rgba(14, 165, 233, 0.08);
+  
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.04);
+  --shadow-xl: 0 20px 25px rgba(0,0,0,0.08), 0 10px 10px rgba(0,0,0,0.04);
+  
+  /* Clean Solid Surfaces (No Glassmorphism) */
+  --glass-bg:     #FFFFFF;
+  --glass-border: #E2E8F0;
+  --glass-blur:   none;
+}
+
+/* === Dark Mode (الليلي / المظلم) === */
+.dark {
+  --bg-primary:    #0B1120;
+  --bg-secondary:  #151E32;
+  --bg-surface:    #1E293B;
+  --bg-hover:      #28354D;
+
+  --border-color:  rgba(255, 255, 255, 0.12);
+  --border-hover:  rgba(255, 255, 255, 0.22);
+
+  --text-primary:   #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-disabled:  #64748B;
+
+  --brand-primary: #818CF8;
+  --brand-hover:   #6366F1;
+  --brand-light:   rgba(129, 140, 248, 0.18);
+
+  --success: #34D399;
+  --warning: #FBBF24;
+  --danger:  #F87171;
+  --info:    #38BDF8;
+
+  --success-bg: rgba(52, 211, 153, 0.16);
+  --warning-bg: rgba(251, 191, 36, 0.16);
+  --danger-bg:  rgba(248, 113, 113, 0.16);
+  --info-bg:    rgba(56, 189, 248, 0.16);
+
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.5);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.6), 0 1px 2px rgba(0,0,0,0.5);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.65), 0 2px 4px rgba(0,0,0,0.45);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.7), 0 4px 6px rgba(0,0,0,0.5);
+  --shadow-xl: 0 20px 25px rgba(0,0,0,0.8), 0 10px 10px rgba(0,0,0,0.5);
+
+  --glass-bg:     #1E293B;
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-blur:   none;
+}
