@@ -811,3 +811,14 @@ html[dir="ltr"] .table td { text-align: left; }
 
 html[dir="rtl"] .table th,
 html[dir="rtl"] .table td { text-align: right; }
+
+/* ============================================================
+   Global Modal Fix
+   يمنع خروج المودال أو التبويبات المنبثقة خارج الشاشة ويضيف سكرول داخلي
+   ============================================================ */
+.fixed.inset-0 > .glass-card,
+.fixed.inset-0 > div[class*="max-w-"] {
+  max-height: 90vh !important;
+  overflow-y: auto !important;
+  margin: auto;
+}
