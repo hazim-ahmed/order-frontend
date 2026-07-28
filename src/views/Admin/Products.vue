@@ -76,7 +76,7 @@
             <tr v-for="product in filteredProducts" :key="product.id">
               <td class="font-bold text-muted">{{ product.id }}</td>
               <td class="font-bold text-brand">{{ product.name }}</td>
-              <td class="text-secondary">{{ categoryMap[product.category_id] || 'غير محدد' }}</td>
+              <td class="text-secondary">{{ product.category_id ? categories.find(c => c.id === product.category_id)?.name : 'غير محدد' }}</td>
               <td>
                 <span class="badge badge-info text-xs">
                   {{ product.unit === 'kg' ? 'كجم (كيلوجرام)' : 'كجم (أساسي)' }}
@@ -352,14 +352,6 @@ const fetchProducts = async () => {
     loading.value = false
   }
 }
-
-const categoryMap = computed(() => {
-  const map = {}
-  categories.value.forEach(c => {
-    map[c.id] = c.name
-  })
-  return map
-})
 
 const filteredProducts = computed(() => {
   let list = [...products.value]
