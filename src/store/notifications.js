@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { io } from 'socket.io-client'
 import { useAuthStore } from './auth'
+import { getApiBaseUrl } from '../config/env'
 
 export const useNotificationStore = defineStore('notifications', {
   state: () => ({
@@ -17,7 +18,7 @@ export const useNotificationStore = defineStore('notifications', {
         this.socket.disconnect()
       }
 
-      const baseURL = import.meta.env.VITE_API_BASE_URL || ''
+      const baseURL = getApiBaseUrl()
       
       this.socket = io(baseURL, {
         auth: {

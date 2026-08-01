@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../store/auth'
+import { getApiBaseUrl } from '../config/env'
 import DashboardLayout from '../views/DashboardLayout.vue'
 
 const routes = [
@@ -73,7 +74,7 @@ const router = createRouter({
 let initializedSetupCache = null
 let setupStatusPromise = null
 
-const setupStatusUrl = () => `${import.meta.env.VITE_API_BASE_URL || ''}/api/setup/status`
+const setupStatusUrl = () => `${getApiBaseUrl()}/api/setup/status`
 
 async function fetchSetupStatus() {
   if (initializedSetupCache?.initialized) return initializedSetupCache

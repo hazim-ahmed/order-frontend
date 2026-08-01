@@ -178,9 +178,11 @@ import OrderTimeline from '../../components/ui/OrderTimeline.vue'
 import OrderStepper from '../../components/ui/OrderStepper.vue'
 import { formatKgWithUnit, formatPricePerKg } from '../../utils/weightFormatter'
 
+import { getApiBaseUrl } from '../../config/env'
+
 const route = useRoute()
 const { locale } = useI18n()
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL !== undefined && import.meta.env.VITE_API_BASE_URL !== null ? import.meta.env.VITE_API_BASE_URL : ''
+const apiBaseUrl = getApiBaseUrl()
 
 const loading = ref(true)
 const order = ref(null)

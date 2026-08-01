@@ -7,15 +7,7 @@
  */
 import axios from 'axios'
 import router from '../router'
-
-/**
- * تحديد عنوان الـ API تلقائياً:
- * - إذا تفرع متغير بيئة VITE_API_BASE_URL يتم استخدامه.
- * - افتراضياً يستخدم المسار النسبي المباشر '' والذي يتم توجيهه تلقائياً عبر Nginx في الإنتاج أو Vite Proxy في التطوير.
- */
-const getApiBaseUrl = () => {
-  return import.meta.env.VITE_API_BASE_URL || ''
-}
+import { getApiBaseUrl } from '../config/env'
 
 const omsApi = axios.create({
   baseURL: getApiBaseUrl(),
