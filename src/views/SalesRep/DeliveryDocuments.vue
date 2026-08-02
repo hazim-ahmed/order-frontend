@@ -68,7 +68,7 @@
     </div>
 
     <div v-else class="glass-card overflow-x-auto">
-      <table class="w-full text-start min-w-[980px]">
+      <table class="w-full text-start min-w-[1080px]">
         <thead>
           <tr class="text-secondary border-b border-[var(--border-color)]">
             <th class="p-3 text-start">رقم السند</th>
@@ -77,6 +77,7 @@
             <th class="p-3 text-start">تاريخ التسليم</th>
             <th class="p-3 text-start">حالة الترحيل</th>
             <th class="p-3 text-start">رقم فاتورة النظام الرئيسي</th>
+            <th class="p-3 text-start">المرفق</th>
             <th class="p-3 text-start">الإجراءات</th>
           </tr>
         </thead>
@@ -109,6 +110,19 @@
               <p v-if="rowErrors[document.id]" class="text-danger text-xs mt-1">{{ rowErrors[document.id] }}</p>
             </td>
             <td class="p-3">
+              <button
+                v-if="document.delivery_image_url"
+                type="button"
+                class="btn btn-outline text-sm px-3 py-1 flex items-center gap-2"
+                :disabled="downloadingRows[document.id]"
+                @click="downloadDocument(document)"
+              >
+                <Download :size="15" />
+                {{ downloadingRows[document.id] ? 'جاري التنزيل...' : 'تنزيل المرفق' }}
+              </button>
+              <span v-else class="text-xs text-secondary">لا يوجد مرفق</span>
+            </td>
+            <td class="p-3">
               <div class="flex items-center gap-2">
                 <button
                   type="button"
@@ -134,7 +148,7 @@
             </td>
           </tr>
           <tr v-if="filteredDocuments.length === 0">
-            <td colspan="7" class="p-8 text-center text-secondary">لا توجد سندات مطابقة للفلاتر الحالية.</td>
+            <td colspan="8" class="p-8 text-center text-secondary">لا توجد سندات مطابقة للفلاتر الحالية.</td>
           </tr>
         </tbody>
       </table>
@@ -144,15 +158,18 @@
 
 <script setup>
 import { computed, onMounted, ref } from 'vue'
-import { AlertTriangle, CheckCircle2, RefreshCw } from 'lucide-vue-next'
+import { AlertTriangle, CheckCircle2, Download, RefreshCw } from 'lucide-vue-next'
 import omsApi from '../../services/omsApi'
 import { formatDateTime } from '../../utils/dateFormatter'
+import { getApiBaseUrl } from '../../config/env'
 
 const loading = ref(true)
 const error = ref('')
 const orders = ref([])
 const rowErrors = ref({})
 const savingRows = ref({})
+const downloadingRows = ref({})
+const apiBaseUrl = getApiBaseUrl()
 const filters = ref({
   postingStatus: 'all',
   search: ''
@@ -193,6 +210,8 @@ const documents = computed(() => {
       delivered_at: order.delivered_at || order.updatedAt,
       document_number: order.documentUsage?.document_number || order.delivery_reference_number || '-',
       book_number: order.documentUsage?.book?.book_number || '',
+      delivery_image_url: order.delivery_image_url || '',
+      created_at: order.created_at || order.createdAt,
       document_posted_to_erp: Boolean(order.document_posted_to_erp),
       erp_invoice_number: order.erp_invoice_number || ''
     }))
@@ -221,9 +240,62 @@ const filteredDocuments = computed(() => {
   })
 })
 
+
+const normalizeInvoiceNumber = (value) => String(value || '').trim().toLowerCase()
+
+const resolveDocumentUrl = (url) => /^https?:\/\//i.test(url) ? url : `${apiBaseUrl}${url}`
+
+const sanitizeFileSegment = (value, fallback) => String(value || fallback)
+  .normalize('NFKC')
+  .replace(/[<>:"/\\|?*\u0000-\u001F]/g, '-')
+  .replace(/\s+/g, '_')
+  .slice(0, 80)
+
+const extensionByMime = {
+  'image/webp': 'webp',
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'application/pdf': 'pdf'
+}
+
+const buildDeliveryProofName = (deliveryDocument, contentType) => {
+  const extension = extensionByMime[contentType] || 'bin'
+  const clientName = sanitizeFileSegment(deliveryDocument.client_name, 'Unknown_Client')
+  const orderNumber = sanitizeFileSegment(deliveryDocument.order_number, 'Order')
+  const rawDate = deliveryDocument.delivered_at || deliveryDocument.created_at
+  const parsedDate = rawDate ? new Date(rawDate) : null
+  const orderDate = parsedDate && !Number.isNaN(parsedDate.getTime())
+    ? parsedDate.toISOString().slice(0, 10)
+    : 'unknown-date'
+  return `Delivery_Proof_${clientName}_${orderDate}_${orderNumber}.${extension}`
+}
+
+const downloadDocument = async (deliveryDocument) => {
+  if (!deliveryDocument.delivery_image_url) return
+  downloadingRows.value = { ...downloadingRows.value, [deliveryDocument.id]: true }
+  try {
+    const response = await omsApi.get(deliveryDocument.delivery_image_url, { responseType: 'blob' })
+    const contentType = (response.headers['content-type'] || 'application/octet-stream').split(';')[0]
+    const blob = new Blob([response.data], { type: contentType })
+    const blobUrl = window.URL.createObjectURL(blob)
+    const link = window.document.createElement('a')
+    link.href = blobUrl
+    link.download = buildDeliveryProofName(deliveryDocument, contentType)
+    window.document.body.appendChild(link)
+    link.click()
+    link.remove()
+    window.URL.revokeObjectURL(blobUrl)
+  } catch (downloadError) {
+    console.error('Download delivery document error:', downloadError)
+    window.open(resolveDocumentUrl(deliveryDocument.delivery_image_url), '_blank')
+  } finally {
+    downloadingRows.value = { ...downloadingRows.value, [deliveryDocument.id]: false }
+  }
+}
 const updatePosting = async (document, posted) => {
   rowErrors.value = { ...rowErrors.value, [document.id]: '' }
-  if (posted && !document.erp_invoice_number) {
+  const invoiceNumber = String(document.erp_invoice_number || '').trim()
+  if (posted && !invoiceNumber) {
     rowErrors.value = {
       ...rowErrors.value,
       [document.id]: 'رقم فاتورة النظام الرئيسي مطلوب عند تأكيد الترحيل.'
@@ -231,11 +303,23 @@ const updatePosting = async (document, posted) => {
     return
   }
 
+  if (posted) {
+    const duplicateDocument = documents.value.find(item =>
+      item.id !== document.id && normalizeInvoiceNumber(item.erp_invoice_number) === normalizeInvoiceNumber(invoiceNumber)
+    )
+    if (duplicateDocument) {
+      rowErrors.value = {
+        ...rowErrors.value,
+        [document.id]: 'رقم الفاتورة مستخدم بالفعل في سند آخر ظاهر في القائمة.'
+      }
+      return
+    }
+  }
   savingRows.value = { ...savingRows.value, [document.id]: true }
   try {
     const response = await omsApi.patch(`/api/orders/${document.order_id}/document-posting`, {
       document_posted_to_erp: posted,
-      erp_invoice_number: posted ? document.erp_invoice_number : ''
+      erp_invoice_number: posted ? invoiceNumber : ''
     })
     const updatedOrder = response.data.order
     orders.value = orders.value.map(order => order.id === document.order_id ? { ...order, ...updatedOrder } : order)
