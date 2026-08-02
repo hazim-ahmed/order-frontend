@@ -60,6 +60,7 @@ const routes = [
       { path: 'admin/reports', name: 'AdminReports', component: () => import('../views/Admin/Reports.vue'), meta: { role: 'admin' } },
       { path: 'admin/audit-log', name: 'AdminAuditLog', component: () => import('../views/Admin/AuditLog.vue'), meta: { role: 'admin' } },
       { path: 'admin/logs', name: 'AdminSystemLogs', component: () => import('../views/Admin/SystemLogs.vue'), meta: { role: 'admin' } },
+      { path: 'admin/backups', name: 'AdminBackups', component: () => import('../views/Admin/Backups.vue'), meta: { role: 'admin' } },
       { path: ':pathMatch(.*)*', name: 'NotFound', component: () => import('../views/NotFound.vue') }
     ]
   }

@@ -175,6 +175,10 @@
             <Terminal :size="18" class="nav-icon text-brand" />
             <span>سجل التدقيق والسجلات الحية</span>
           </router-link>
+          <router-link :to="{ name: 'AdminBackups' }" class="nav-item">
+            <Archive :size="18" class="nav-icon text-emerald-400" />
+            <span>النسخ الاحتياطي</span>
+          </router-link>
         </div>
       </template>
     </nav>
@@ -187,7 +191,7 @@ import { useAuthStore } from '../../store/auth';
 import {
   Factory, LayoutDashboard, PlusCircle, ListOrdered,
   Clock, Layers, Inbox, Settings, CheckSquare, RotateCcw,
-  History, Users, FileBarChart, Activity, X, Package, Folders, Terminal, BookOpen, FileText
+  History, Users, FileBarChart, Activity, X, Package, Folders, Terminal, BookOpen, FileText, Archive
 } from 'lucide-vue-next';
 
 const authStore = useAuthStore();

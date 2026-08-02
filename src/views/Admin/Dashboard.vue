@@ -25,7 +25,7 @@
           <Database :size="20" class="text-brand" /> إدارة البيانات الأساسية
         </h3>
       </div>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <router-link :to="{ name: 'AdminUsers' }" class="action-card">
           <Users :size="24" class="text-muted mb-2" />
           <span class="text-sm font-semibold">المستخدمين</span>
@@ -41,6 +41,10 @@
         <router-link :to="{ name: 'AdminCategories' }" class="action-card">
           <Folders :size="24" class="text-muted mb-2" />
           <span class="text-sm font-semibold">الأقسام</span>
+        </router-link>
+        <router-link :to="{ name: 'AdminBackups' }" class="action-card">
+          <Archive :size="24" class="text-muted mb-2" />
+          <span class="text-sm font-semibold">النسخ الاحتياطي</span>
         </router-link>
       </div>
     </div>
@@ -128,7 +132,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { DollarSign, CheckCircle, Activity, XCircle, Database, Layers, Users, Briefcase, Package, Folders } from 'lucide-vue-next'
+import { DollarSign, CheckCircle, Activity, XCircle, Database, Layers, Users, Briefcase, Package, Folders, Archive } from 'lucide-vue-next'
 import omsApi from '../../services/omsApi'
 import { formatKgWithUnit } from '../../utils/weightFormatter'
 import StatCard from '../../components/ui/StatCard.vue'
