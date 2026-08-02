@@ -55,18 +55,18 @@
           </thead>
           <tbody>
             <tr v-for="order in filteredOrders" :key="order.id">
-              <td>
+              <td data-label="رقم الطلب">
                 <router-link :to="{ name: 'SharedOrderDetail', params: { id: order.id } }" class="font-bold text-brand hover:underline">
                   {{ order.order_number }}
                 </router-link>
               </td>
-              <td class="text-secondary">{{ order.salesRep?.name || '-' }}</td>
-              <td class="font-medium">{{ order.client?.name || '-' }}</td>
-              <td class="text-secondary text-xs font-mono" dir="ltr">{{ formatDateTime(order.created_at || order.createdAt) }}</td>
-              <td>
+              <td data-label="المندوب" class="text-secondary">{{ order.salesRep?.name || '-' }}</td>
+              <td data-label="العميل" class="font-medium">{{ order.client?.name || '-' }}</td>
+              <td data-label="التاريخ" class="text-secondary text-xs font-mono" dir="ltr">{{ formatDateTime(order.created_at || order.createdAt) }}</td>
+              <td data-label="الحالة">
                 <OrderStatusBadge :status="order.status" />
               </td>
-              <td class="text-center">
+              <td data-label="إجراءات" class="text-center">
                 <button 
                   v-if="canCancel(order.status)" 
                   @click="openCancelModal(order.id)" 

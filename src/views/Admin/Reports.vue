@@ -52,7 +52,7 @@
 
     <div v-else class="space-y-6">
       <!-- KPI Stats Summary Cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <div class="glass-card p-4 border-r-4 border-blue-500 flex items-center justify-between">
           <div>
             <p class="text-xs text-secondary font-bold">إجمالي الطلبات</p>

@@ -1,5 +1,5 @@
 <template>
-  <div class="driver-dashboard animate-slide-up pb-20">
+  <div class="driver-dashboard animate-slide-up pb-6">
     <div class="header-section mb-6 text-center">
       <h2 class="text-2xl font-bold">{{ $t('nav.activeOrders') }}</h2>
       <p class="text-secondary mt-1">الطلبات والمرتجعات المسندة إليك حالياً.</p>

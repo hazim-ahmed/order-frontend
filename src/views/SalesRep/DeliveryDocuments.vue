@@ -121,6 +121,7 @@
                 {{ downloadingRows[document.id] ? 'جاري التنزيل...' : 'تنزيل المرفق' }}
               </button>
               <span v-else class="text-xs text-secondary">لا يوجد مرفق</span>
+              <p v-if="downloadErrors[document.id]" class="text-danger text-xs mt-1">{{ downloadErrors[document.id] }}</p>
             </td>
             <td class="p-3">
               <div class="flex items-center gap-2">
@@ -161,7 +162,6 @@ import { computed, onMounted, ref } from 'vue'
 import { AlertTriangle, CheckCircle2, Download, RefreshCw } from 'lucide-vue-next'
 import omsApi from '../../services/omsApi'
 import { formatDateTime } from '../../utils/dateFormatter'
-import { getApiBaseUrl } from '../../config/env'
 
 const loading = ref(true)
 const error = ref('')
@@ -169,7 +169,7 @@ const orders = ref([])
 const rowErrors = ref({})
 const savingRows = ref({})
 const downloadingRows = ref({})
-const apiBaseUrl = getApiBaseUrl()
+const downloadErrors = ref({})
 const filters = ref({
   postingStatus: 'all',
   search: ''
@@ -243,7 +243,23 @@ const filteredDocuments = computed(() => {
 
 const normalizeInvoiceNumber = (value) => String(value || '').trim().toLowerCase()
 
-const resolveDocumentUrl = (url) => /^https?:\/\//i.test(url) ? url : `${apiBaseUrl}${url}`
+const getDeliveryDownloadUrl = (url) => String(url || '').replace(/\/view(\?.*)?$/, '/download')
+
+const readDownloadErrorMessage = async (downloadError) => {
+  const fallbackMessage = 'تعذر تنزيل المرفق. يرجى تحديث الصفحة والمحاولة مرة أخرى.'
+  const data = downloadError.response?.data
+
+  if (data instanceof Blob) {
+    const text = await data.text()
+    try {
+      return JSON.parse(text).error || fallbackMessage
+    } catch (parseError) {
+      return text || fallbackMessage
+    }
+  }
+
+  return data?.error || fallbackMessage
+}
 
 const sanitizeFileSegment = (value, fallback) => String(value || fallback)
   .normalize('NFKC')
@@ -272,9 +288,10 @@ const buildDeliveryProofName = (deliveryDocument, contentType) => {
 
 const downloadDocument = async (deliveryDocument) => {
   if (!deliveryDocument.delivery_image_url) return
+  downloadErrors.value = { ...downloadErrors.value, [deliveryDocument.id]: '' }
   downloadingRows.value = { ...downloadingRows.value, [deliveryDocument.id]: true }
   try {
-    const response = await omsApi.get(deliveryDocument.delivery_image_url, { responseType: 'blob' })
+    const response = await omsApi.get(getDeliveryDownloadUrl(deliveryDocument.delivery_image_url), { responseType: 'blob' })
     const contentType = (response.headers['content-type'] || 'application/octet-stream').split(';')[0]
     const blob = new Blob([response.data], { type: contentType })
     const blobUrl = window.URL.createObjectURL(blob)
@@ -287,7 +304,10 @@ const downloadDocument = async (deliveryDocument) => {
     window.URL.revokeObjectURL(blobUrl)
   } catch (downloadError) {
     console.error('Download delivery document error:', downloadError)
-    window.open(resolveDocumentUrl(deliveryDocument.delivery_image_url), '_blank')
+    downloadErrors.value = {
+      ...downloadErrors.value,
+      [deliveryDocument.id]: await readDownloadErrorMessage(downloadError)
+    }
   } finally {
     downloadingRows.value = { ...downloadingRows.value, [deliveryDocument.id]: false }
   }

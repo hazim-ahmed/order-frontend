@@ -1,7 +1,9 @@
 @import "tailwindcss";
 
 /* ============================================================
-   Google Fonts Import
+   Google Fonts Import — المصدر الوحيد لتحميل الخطوط
+   Cairo + Noto Kufi Arabic (عربي) | Inter (إنجليزي) | IBM Plex Mono (كود)
+   ملاحظة: تم إزالة <link> من index.html لتجنب التحميل المزدوج
    ============================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Noto+Kufi+Arabic:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 @import './assets/css/theme.css';
@@ -501,6 +503,14 @@ textarea.form-input { resize: vertical; min-height: 80px; }
   border-radius: var(--radius-sm);
 }
 
+/* تكبير btn-sm على الموبايل لسهولة اللمس */
+@media (max-width: 640px) {
+  .btn-sm {
+    padding: 0.45rem 0.875rem;
+    min-height: 36px;
+  }
+}
+
 .btn-lg {
   padding: 0.75rem 1.5rem;
   font-size: var(--text-md);
@@ -579,6 +589,88 @@ textarea.form-input { resize: vertical; min-height: 80px; }
 }
 .dark .table tbody tr:hover {
   background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* ============================================================
+   Responsive Table — Card View on Mobile (< 640px)
+   تحويل الجداول من horizontal scroll إلى بطاقات عمودية
+   يعمل مع أي <td data-label="..."> على الموبايل
+   ============================================================ */
+@media (max-width: 640px) {
+  /* إيقاف الـ scroll الأفقي وإظهار كبطاقات */
+  .table-wrapper {
+    overflow-x: visible;
+  }
+
+  /* إخفاء الـ header row */
+  .table thead {
+    display: none;
+  }
+
+  /* كل صف يصبح بطاقة مستقلة */
+  .table tbody tr {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-sm);
+    overflow: hidden;
+    box-shadow: var(--shadow-xs);
+  }
+
+  /* كل خلية تصبح صف بـ label + value */
+  .table td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-compact);
+    border-bottom: 1px solid var(--border-color);
+    border-inline-start: none;
+    border-inline-end: none;
+    font-size: var(--text-sm);
+  }
+
+  .table td:last-child {
+    border-bottom: none;
+  }
+
+  /* الـ label من data-label attribute */
+  .table td[data-label]::before {
+    content: attr(data-label);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 90px;
+  }
+
+  /* خلايا الإجراءات */
+  .table td[data-label="إجراءات"],
+  .table td.actions-cell {
+    justify-content: flex-end;
+    gap: var(--space-xs);
+  }
+
+  .table td[data-label="إجراءات"]::before,
+  .table td.actions-cell::before {
+    display: none;
+  }
+
+  /* إلغاء hover على المستوى row للموبايل */
+  .table tbody tr:hover {
+    background-color: var(--bg-surface);
+  }
+
+  /* Dark mode للبطاقات */
+  .dark .table tbody tr {
+    background: var(--bg-surface);
+    border-color: var(--border-color);
+  }
 }
 
 .dark select option {

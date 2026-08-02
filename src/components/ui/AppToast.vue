@@ -72,6 +72,17 @@ const toastIcon = (type) => {
   width: 100%;
 }
 
+/* على الموبايل: Toast يمتد من حافة لحافة */
+@media (max-width: 480px) {
+  .toast-container {
+    bottom: 16px;
+    inset-inline-end: 12px;
+    inset-inline-start: 12px;
+    max-width: none;
+    width: auto;
+  }
+}
+
 .toast {
   display: flex;
   align-items: flex-start;

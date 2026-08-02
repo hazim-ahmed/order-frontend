@@ -74,27 +74,27 @@
           </thead>
           <tbody>
             <tr v-for="product in filteredProducts" :key="product.id">
-              <td class="font-bold text-muted">{{ product.id }}</td>
-              <td class="font-bold text-brand">{{ product.name }}</td>
-              <td class="text-secondary">{{ product.category_id ? categories.find(c => c.id === product.category_id)?.name : 'غير محدد' }}</td>
-              <td>
+              <td data-label="#" class="font-bold text-muted">{{ product.id }}</td>
+              <td data-label="اسم المنتج" class="font-bold text-brand">{{ product.name }}</td>
+              <td data-label="القسم" class="text-secondary">{{ product.category_id ? categories.find(c => c.id === product.category_id)?.name : 'غير محدد' }}</td>
+              <td data-label="وحدة القياس">
                 <span class="badge badge-info text-xs">
                   {{ product.unit === 'kg' ? 'كجم (كيلوجرام)' : 'كجم (أساسي)' }}
                 </span>
               </td>
-              <td class="font-bold text-success" dir="ltr">
+              <td data-label="السعر" class="font-bold text-success" dir="ltr">
                 {{ product.unit === 'kg' ? Number(product.current_price_per_ton).toFixed(2) : (Number(product.current_price_per_ton) / 1000).toFixed(2) }} SAR / كجم
               </td>
-              <td class="font-bold text-primary" dir="ltr" :class="Number(product.stock_quantity) < 10 ? 'text-danger' : ''">
+              <td data-label="المخزون" class="font-bold text-primary" dir="ltr" :class="Number(product.stock_quantity) < 10 ? 'text-danger' : ''">
                 {{ (Number(product.stock_quantity || 0) * (product.unit === 'kg' ? 1 : 1000)).toLocaleString() }} كجم
                 
               </td>
-              <td>
+              <td data-label="الحالة">
                 <span :class="['badge', product.is_active ? 'badge-success' : 'badge-danger']">
                   {{ product.is_active ? 'نشط' : 'غير نشط' }}
                 </span>
               </td>
-              <td class="text-center">
+              <td data-label="إجراءات" class="text-center">
                 <button @click="openEditModal(product)" class="btn-ghost text-info hover:bg-blue-500/10 p-2 rounded-md transition-colors" title="تعديل">
                   <Edit :size="18" />
                 </button>

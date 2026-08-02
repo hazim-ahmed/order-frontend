@@ -145,10 +145,10 @@
                   log.level === 'ERROR' ? 'bg-red-500/5' : log.level === 'WARN' ? 'bg-yellow-500/5' : ''
                 ]"
               >
-                <td class="p-3 whitespace-nowrap text-secondary text-[11px]" dir="ltr">
+                <td data-label="الوقت" class="p-3 whitespace-nowrap text-secondary text-[11px]" dir="ltr">
                   {{ formatTimestamp(log.timestamp) }}
                 </td>
-                <td class="p-3 whitespace-nowrap">
+                <td data-label="المستوى" class="p-3 whitespace-nowrap">
                   <span 
                     :class="[
                       'px-2 py-0.5 rounded text-[10px] font-bold uppercase',
@@ -160,19 +160,19 @@
                     {{ log.level }}
                   </span>
                 </td>
-                <td class="p-3 whitespace-nowrap text-brand font-bold">{{ log.category }}</td>
-                <td class="p-3 font-mono text-primary max-w-md truncate" :title="log.message">{{ log.message }}</td>
-                <td class="p-3 whitespace-nowrap text-secondary">
+                <td data-label="التصنيف" class="p-3 whitespace-nowrap text-brand font-bold">{{ log.category }}</td>
+                <td data-label="الرسالة" class="p-3 font-mono text-primary max-w-md truncate" :title="log.message">{{ log.message }}</td>
+                <td data-label="المستخدم" class="p-3 whitespace-nowrap text-secondary">
                   <span v-if="log.user" class="text-xs">{{ log.user.username }}</span>
                   <span v-else class="text-muted text-[10px]">-</span>
                 </td>
-                <td class="p-3 whitespace-nowrap text-center">
+                <td data-label="الاستجابة" class="p-3 whitespace-nowrap text-center">
                   <span v-if="log.statusCode" :class="getStatusBadgeClass(log.statusCode)" class="px-2 py-0.5 rounded text-[10px] font-bold">
                     {{ log.statusCode }}
                   </span>
                   <span v-if="log.durationMs" class="text-[10px] text-muted mr-1">{{ log.durationMs }}ms</span>
                 </td>
-                <td class="p-3 whitespace-nowrap text-center font-sans">
+                <td data-label="عرض" class="p-3 whitespace-nowrap text-center font-sans">
                   <button @click="selectedLog = log" class="btn-ghost text-info p-1 rounded" title="عرض التفاصيل">
                     <Eye :size="16" />
                   </button>
@@ -209,16 +209,16 @@
           </thead>
           <tbody>
             <tr v-for="log in orderLogs" :key="log.id" class="border-b border-[var(--border-color)] hover:bg-[var(--bg-hover)] transition-colors">
-              <td class="p-3" dir="ltr">{{ new Date(log.created_at || log.createdAt).toLocaleString('ar-SA') }}</td>
-              <td class="p-3 font-bold text-brand">
+              <td data-label="التاريخ" class="p-3" dir="ltr">{{ new Date(log.created_at || log.createdAt).toLocaleString('ar-SA') }}</td>
+              <td data-label="رقم الطلب" class="p-3 font-bold text-brand">
                 <router-link :to="{ name: 'SharedOrderDetail', params: { id: log.order_id || log.order?.id } }">
                   {{ log.order?.order_number || `طلب #${log.order_id}` }}
                 </router-link>
               </td>
-              <td class="p-3">{{ log.user?.username || log.user?.name || `مستخدم #${log.changed_by || log.user_id || '-'}` }}</td>
-              <td class="p-3 text-secondary text-sm">{{ $t(`order.status.${log.from_status}`) || log.from_status }}</td>
-              <td class="p-3 font-bold text-sm">{{ $t(`order.status.${log.to_status}`) || log.to_status }}</td>
-              <td class="p-3 text-sm text-secondary">{{ formatPayload(log.payload) }}</td>
+              <td data-label="المستخدم" class="p-3">{{ log.user?.username || log.user?.name || `مستخدم #${log.changed_by || log.user_id || '-'}` }}</td>
+              <td data-label="من حالة" class="p-3 text-secondary text-sm">{{ $t(`order.status.${log.from_status}`) || log.from_status }}</td>
+              <td data-label="إلى حالة" class="p-3 font-bold text-sm">{{ $t(`order.status.${log.to_status}`) || log.to_status }}</td>
+              <td data-label="ملاحظات" class="p-3 text-sm text-secondary">{{ formatPayload(log.payload) }}</td>
             </tr>
             <tr v-if="orderLogs.length === 0">
               <td colspan="6" class="p-8 text-center text-secondary">لا توجد سجلات تدقيق طلبات مسجلة حتى الآن.</td>

@@ -48,52 +48,54 @@
       <div class="loader"></div>
     </div>
 
-    <div v-else class="glass-card overflow-x-auto">
-      <table class="w-full text-start">
-        <thead>
-          <tr class="text-secondary border-b border-[var(--border-color)]">
-            <th class="p-3 text-start">الاسم الكامل</th>
-            <th class="p-3 text-start">اسم المستخدم</th>
-            <th class="p-3 text-start">معلومات التواصل</th>
-            <th class="p-3 text-start">الدور (الصلاحية)</th>
-            <th class="p-3 text-start">الحالة</th>
-            <th class="p-3 text-center">إجراءات</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="user in filteredUsers" :key="user.id" class="border-b border-[var(--border-color)] hover:bg-[var(--bg-hover)] transition-colors">
-            <td class="p-3 font-bold">{{ user.name || '-' }}</td>
-            <td class="p-3" dir="ltr">{{ user.username }}</td>
-            <td class="p-3">
-              <div class="text-xs text-secondary flex flex-col gap-1 mt-1">
-                <span v-if="user.phone" dir="ltr">{{ user.phone }}</span>
-                <span v-if="user.email" dir="ltr">{{ user.email }}</span>
-              </div>
-            </td>
-            <td class="p-3">
-              <span class="text-xs px-2 py-1 rounded-full bg-[var(--bg-secondary)] border border-[var(--border-color)]">
-                {{ formatRole(user.role) }}
-              </span>
-            </td>
-            <td class="p-3">
-              <span :class="['text-xs px-2 py-1 rounded-full', user.is_active ? 'bg-green-500/10 text-success' : 'bg-red-500/10 text-danger']">
-                {{ user.is_active ? 'نشط' : 'معطل' }}
-              </span>
-            </td>
-            <td class="p-3 text-center">
-              <button @click="openEditModal(user)" class="btn btn-ghost text-info hover:bg-blue-500/10 p-2 rounded-lg ml-2" title="تعديل">
-                <Edit :size="18" />
-              </button>
-              <button @click="toggleUserStatus(user)" :class="['btn btn-ghost p-2 rounded-lg', user.is_active ? 'text-danger hover:bg-red-500/10' : 'text-success hover:bg-green-500/10']" :title="user.is_active ? 'تعطيل الحساب' : 'تفعيل الحساب'">
-                <Power :size="18" />
-              </button>
-            </td>
-          </tr>
-          <tr v-if="filteredUsers.length === 0">
-            <td colspan="6" class="p-8 text-center text-secondary">لا يوجد مستخدمين مطابقين للبحث.</td>
-          </tr>
-        </tbody>
-      </table>
+    <div v-else class="glass-card overflow-hidden">
+      <div class="table-wrapper">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">الاسم الكامل</th>
+              <th scope="col">اسم المستخدم</th>
+              <th scope="col">معلومات التواصل</th>
+              <th scope="col">الدور (الصلاحية)</th>
+              <th scope="col">الحالة</th>
+              <th scope="col" class="text-center">إجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="user in filteredUsers" :key="user.id">
+              <td data-label="الاسم" class="font-bold">{{ user.name || '-' }}</td>
+              <td data-label="اسم المستخدم" dir="ltr">{{ user.username }}</td>
+              <td data-label="التواصل">
+                <div class="text-xs text-secondary flex flex-col gap-1 mt-1">
+                  <span v-if="user.phone" dir="ltr">{{ user.phone }}</span>
+                  <span v-if="user.email" dir="ltr">{{ user.email }}</span>
+                </div>
+              </td>
+              <td data-label="الدور">
+                <span class="text-xs px-2 py-1 rounded-full bg-[var(--bg-secondary)] border border-[var(--border-color)]">
+                  {{ formatRole(user.role) }}
+                </span>
+              </td>
+              <td data-label="الحالة">
+                <span :class="['text-xs px-2 py-1 rounded-full', user.is_active ? 'bg-green-500/10 text-success' : 'bg-red-500/10 text-danger']">
+                  {{ user.is_active ? 'نشط' : 'معطل' }}
+                </span>
+              </td>
+              <td data-label="إجراءات" class="text-center">
+                <button @click="openEditModal(user)" class="btn btn-ghost text-info hover:bg-blue-500/10 p-2 rounded-lg" title="تعديل">
+                  <Edit :size="18" />
+                </button>
+                <button @click="toggleUserStatus(user)" :class="['btn btn-ghost p-2 rounded-lg', user.is_active ? 'text-danger hover:bg-red-500/10' : 'text-success hover:bg-green-500/10']" :title="user.is_active ? 'تعطيل الحساب' : 'تفعيل الحساب'">
+                  <Power :size="18" />
+                </button>
+              </td>
+            </tr>
+            <tr v-if="filteredUsers.length === 0">
+              <td colspan="6" class="p-8 text-center text-secondary">لا يوجد مستخدمين مطابقين للبحث.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- User Modal (Create/Edit) -->

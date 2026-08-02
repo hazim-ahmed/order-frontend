@@ -1,5 +1,5 @@
 <template>
-  <div class="driver-active-order animate-slide-up max-w-lg mx-auto pb-24">
+  <div class="driver-active-order animate-slide-up max-w-lg mx-auto pb-6">
     <div class="flex items-center gap-4 mb-6 px-2 md:px-0">
       <button @click="$router.back()" class="btn-ghost p-2 rounded-full hover:bg-[var(--bg-hover)]">
         <ArrowRight :size="20" />
